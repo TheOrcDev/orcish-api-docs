@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { HomeLayout } from "fumadocs-ui/layouts/home";
+import logoImage from "@/assets/images/orcish-api-logo.png";
 import { baseOptions } from "@/lib/layout.shared";
 
 export const Route = createFileRoute("/")({
@@ -12,11 +13,7 @@ function Home() {
       {...baseOptions()}
       className="text-center flex flex-col items-center py-32 justify-center"
     >
-      <img
-        src="/src/assets/images/orcish-api-logo.png"
-        alt="Orcish API"
-        className="size-40"
-      />
+      <img src={logoImage} alt="Orcish API" className="size-40" />
       <h1 className="font-medium text-xl mb-4">Orcish API Documentation.</h1>
       <Link
         to="/docs/$"
