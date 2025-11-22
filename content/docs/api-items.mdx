@@ -1,0 +1,303 @@
+---
+title: Items API
+description: Complete API documentation for Item endpoints
+icon: Package
+---
+
+# Items API
+
+Complete documentation for all item-related endpoints in the Orcish API.
+
+## Item Object
+
+```typescript
+{
+  id: number;              // Serial primary key (auto-generated)
+  name: string;            // Item name (max 255 characters)
+  type: string;            // Item type (max 100 characters)
+  description: string;      // Item description (text)
+  value: number;           // Item value (integer)
+  createdAt: string;       // ISO 8601 timestamp (auto-generated)
+  updatedAt: string;       // ISO 8601 timestamp (auto-updated)
+}
+```
+
+## Endpoints
+
+### List All Items
+
+Retrieve all items from the database.
+
+**Endpoint:** `GET /api/items`
+
+**Response:** `200 OK`
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Bloodcleaver Axe",
+    "type": "weapon",
+    "description": "A massive double-bladed axe forged from dark iron, stained with the blood of countless battles",
+    "value": 1500,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "name": "Grog Flask",
+    "type": "consumable",
+    "description": "A flask of potent orcish grog that restores strength and courage",
+    "value": 75,
+    "createdAt": "2024-01-02T00:00:00.000Z",
+    "updatedAt": "2024-01-02T00:00:00.000Z"
+  }
+]
+```
+
+**Error Responses:**
+
+- `500 Internal Server Error`: `{ "error": "Failed to fetch items" }`
+
+**Example Request:**
+
+```bash
+curl -X GET https://orcish-api.com/api/items
+```
+
+---
+
+### Get Item by ID
+
+Retrieve a specific item by its ID.
+
+**Endpoint:** `GET /api/items/:id`
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | number | Yes | The unique identifier of the item |
+
+**Response:** `200 OK`
+
+```json
+{
+  "id": 1,
+  "name": "Bloodcleaver Axe",
+  "type": "weapon",
+  "description": "A massive double-bladed axe forged from dark iron, stained with the blood of countless battles",
+  "value": 1500,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+**Error Responses:**
+
+- `404 Not Found`: `{ "error": "Item not found" }`
+- `500 Internal Server Error`: `{ "error": "Failed to fetch item" }`
+
+**Example Request:**
+
+```bash
+curl -X GET https://orcish-api.com/api/items/1
+```
+
+---
+
+### Create Item
+
+Create a new item in the database.
+
+**Endpoint:** `POST /api/items`
+
+**Request Body:**
+
+```json
+{
+  "name": "Bloodcleaver Axe",
+  "type": "weapon",
+  "description": "A massive double-bladed axe forged from dark iron, stained with the blood of countless battles",
+  "value": 1500
+}
+```
+
+**Request Body Schema:**
+
+| Field | Type | Required | Constraints | Description |
+|-------|------|----------|-------------|-------------|
+| `name` | string | Yes | Max 255 characters | Item name |
+| `type` | string | Yes | Max 100 characters | Item type/category |
+| `description` | string | Yes | Text field | Item description |
+| `value` | number | Yes | Integer | Item value (can be 0) |
+
+**Response:** `201 Created`
+
+```json
+{
+  "id": 1,
+  "name": "Bloodcleaver Axe",
+  "type": "weapon",
+  "description": "A massive double-bladed axe forged from dark iron, stained with the blood of countless battles",
+  "value": 1500,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+**Error Responses:**
+
+- `400 Bad Request`: `{ "error": "Name, type, description, and value are required" }`
+- `500 Internal Server Error`: `{ "error": "Failed to create item" }`
+
+**Example Request:**
+
+```bash
+curl -X POST https://orcish-api.com/api/items \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Bloodcleaver Axe",
+    "type": "weapon",
+    "description": "A massive double-bladed axe forged from dark iron, stained with the blood of countless battles",
+    "value": 1500
+  }'
+```
+
+---
+
+### Update Item
+
+Update an existing item. All fields are optional - only provided fields will be updated.
+
+**Endpoint:** `PUT /api/items/:id`
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | number | Yes | The unique identifier of the item |
+
+**Request Body:**
+
+```json
+{
+  "name": "Skullcrusher Mace",
+  "type": "weapon",
+  "description": "A brutal mace adorned with spikes and the skulls of fallen enemies",
+  "value": 2000
+}
+```
+
+**Request Body Schema:**
+
+| Field | Type | Required | Constraints | Description |
+|-------|------|----------|-------------|-------------|
+| `name` | string | No | Max 255 characters | Item name |
+| `type` | string | No | Max 100 characters | Item type/category |
+| `description` | string | No | Text field | Item description |
+| `value` | number | No | Integer | Item value (can be 0) |
+
+**Response:** `200 OK`
+
+```json
+{
+  "id": 1,
+  "name": "Skullcrusher Mace",
+  "type": "weapon",
+  "description": "A brutal mace adorned with spikes and the skulls of fallen enemies",
+  "value": 2000,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T01:00:00.000Z"
+}
+```
+
+**Note:** 
+- The `updatedAt` field is automatically set to the current timestamp when any field is updated.
+- The `value` field can be set to `0`, so the API uses `value !== undefined` rather than truthiness checks.
+
+**Error Responses:**
+
+- `400 Bad Request`: `{ "error": "No fields to update" }`
+- `404 Not Found`: `{ "error": "Item not found" }`
+- `500 Internal Server Error`: `{ "error": "Failed to update item" }`
+
+**Example Request:**
+
+```bash
+curl -X PUT https://orcish-api.com/api/items/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Skullcrusher Mace",
+    "type": "weapon",
+    "description": "A brutal mace adorned with spikes and the skulls of fallen enemies",
+    "value": 2000
+  }'
+```
+
+**Partial Update Example:**
+
+You can update only specific fields:
+
+```bash
+curl -X PUT https://orcish-api.com/api/items/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "value": 2000
+  }'
+```
+
+**Setting Value to Zero:**
+
+You can set the value to 0:
+
+```bash
+curl -X PUT https://orcish-api.com/api/items/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "value": 0
+  }'
+```
+
+---
+
+### Delete Item
+
+Delete an item from the database.
+
+**Endpoint:** `DELETE /api/items/:id`
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | number | Yes | The unique identifier of the item |
+
+**Response:** `200 OK`
+
+```json
+{
+  "message": "Item deleted",
+  "item": {
+    "id": 1,
+    "name": "Bloodcleaver Axe",
+    "type": "weapon",
+    "description": "A massive double-bladed axe forged from dark iron, stained with the blood of countless battles",
+    "value": 1500,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+}
+```
+
+**Error Responses:**
+
+- `404 Not Found`: `{ "error": "Item not found" }`
+- `500 Internal Server Error`: `{ "error": "Failed to delete item" }`
+
+**Example Request:**
+
+```bash
+curl -X DELETE https://orcish-api.com/api/items/1
+```
+

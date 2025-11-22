@@ -1,34 +1,80 @@
 ---
-title: Hello World
-description: Your favourite docs framework.
-icon: Rocket
+title: Orcish API
+description: Complete REST API documentation for managing users and items
+icon: Code
 ---
 
-Hey there! Fumadocs is the docs framework that also works on Tanstack Start!
+# Welcome to the Orcish API
 
-## Heading
+The Orcish API is a powerful RESTful API built with the Hono framework, using Drizzle ORM with PostgreSQL. Manage your orcish warriors and their legendary weapons with ease.
 
-Hello World!
+## Quick Start
+
+All API endpoints are prefixed with `/api`:
+
+```
+GET /api/users    # List all users
+GET /api/items    # List all items
+```
+
+## Getting Started
+
+The Orcish API provides endpoints for managing:
+
+- **Users** - Orcish warriors and clan members
+- **Items** - Weapons, armor, and consumables
 
 <Cards>
   <Card
-    title="Learn more about Tanstack Start"
-    href="https://tanstack.com/start"
+    title="API Reference"
+    href="/docs/api"
+    description="Complete API overview, authentication, and general information"
   />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
+  <Card
+    title="Users API"
+    href="/docs/api-users"
+    description="Manage orcish warriors and clan members"
+  />
+  <Card
+    title="Items API"
+    href="/docs/api-items"
+    description="Manage weapons, armor, and consumables"
+  />
 </Cards>
 
-### CodeBlock
+## Example Request
 
-```ts
-console.log('Hello World');
+Create a new orcish warrior:
+
+```bash
+curl -X POST https://orcish-api.com/api/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Gruk the Mighty",
+    "email": "gruk@orcclan.com"
+  }'
 ```
 
-#### Table
+## Features
 
-| Head                            | Description                         |
-| ------------------------------- | ----------------------------------- |
-| `hello`                         | Hello World                         |
-| very **important**              | Hey                                 |
-| _Surprisingly_                  | Fumadocs                            |
-| very long text that looks weird | hello world hello world hello world |
+- **RESTful Design** - Standard HTTP methods and status codes
+- **Full CRUD Operations** - Create, read, update, and delete resources
+- **Partial Updates** - Update only the fields you need
+- **Auto Timestamps** - Automatic `createdAt` and `updatedAt` tracking
+- **Error Handling** - Comprehensive error responses with appropriate status codes
+
+## Base URL
+
+All endpoints are available at:
+
+```
+https://orcish-api.com/api
+```
+
+## Authentication
+
+Currently, the Orcish API does not require authentication. All endpoints are publicly accessible.
+
+---
+
+Ready to get started? Check out the [API Reference](/docs/api) for complete documentation!

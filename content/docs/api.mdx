@@ -1,0 +1,191 @@
+---
+title: API Reference
+description: Complete API documentation for the Orcish API
+icon: Code
+---
+
+# Orcish API Documentation
+
+## Introduction
+
+The Orcish API is a RESTful API built with the Hono framework, using Drizzle ORM with PostgreSQL. It provides endpoints for managing users and items in your application.
+
+## Base URL
+
+All API endpoints are prefixed with `/api`:
+
+```
+https://orcish-api.com/api
+```
+
+## Authentication
+
+Currently, the Orcish API does not require authentication. All endpoints are publicly accessible.
+
+## Data Models
+
+### User Object
+
+```typescript
+{
+  id: number;              // Serial primary key (auto-generated)
+  name: string;            // User's name (max 255 characters)
+  email: string;           // User's email (max 255 characters, unique)
+  createdAt: string;       // ISO 8601 timestamp (auto-generated)
+  updatedAt: string;       // ISO 8601 timestamp (auto-updated)
+}
+```
+
+### Item Object
+
+```typescript
+{
+  id: number;              // Serial primary key (auto-generated)
+  name: string;            // Item name (max 255 characters)
+  type: string;            // Item type (max 100 characters)
+  description: string;      // Item description (text)
+  value: number;           // Item value (integer)
+  createdAt: string;       // ISO 8601 timestamp (auto-generated)
+  updatedAt: string;       // ISO 8601 timestamp (auto-updated)
+}
+```
+
+## HTTP Status Codes
+
+The API uses standard HTTP status codes:
+
+| Code | Description |
+|------|-------------|
+| `200` | Success (GET, PUT, DELETE) |
+| `201` | Created (POST) |
+| `400` | Bad Request (validation errors) |
+| `404` | Not Found (resource doesn't exist) |
+| `500` | Internal Server Error (database/processing errors) |
+
+## Error Responses
+
+All error responses follow this format:
+
+```json
+{
+  "error": "Error message description"
+}
+```
+
+## Root Endpoint
+
+### Get API Information
+
+Returns API information and available endpoints.
+
+**Endpoint:** `GET /`
+
+**Response:** `200 OK`
+
+```json
+{
+  "message": "Orcish API",
+  "endpoints": {
+    "users": "/api/users",
+    "items": "/api/items"
+  }
+}
+```
+
+---
+
+## API Endpoints
+
+The Orcish API provides endpoints for managing users and items. Detailed documentation for each resource is available in separate pages:
+
+- **[Users API](/docs/api-users)** - Complete documentation for all user endpoints
+- **[Items API](/docs/api-items)** - Complete documentation for all item endpoints
+
+---
+
+## Best Practices
+
+### Request Headers
+
+Always include the `Content-Type` header when sending JSON data:
+
+```bash
+Content-Type: application/json
+```
+
+### Error Handling
+
+Always check the HTTP status code before processing the response body. Handle errors appropriately:
+
+```javascript
+const response = await fetch('/api/users/1');
+if (!response.ok) {
+  const error = await response.json();
+  console.error('Error:', error.error);
+  // Handle error appropriately
+} else {
+  const user = await response.json();
+  // Process user data (e.g., Gruk the Mighty)
+}
+```
+
+### Partial Updates
+
+When updating resources, you only need to include the fields you want to change. Omitted fields will remain unchanged.
+
+### Timestamps
+
+- `createdAt` is set automatically when a resource is created and never changes
+- `updatedAt` is set automatically when a resource is created and updated whenever any field is modified
+
+### Value Field
+
+For items, the `value` field can be `0`. When updating, use `value !== undefined` to check if the value should be updated, not truthiness checks.
+
+### Rate Limiting
+
+Currently, there are no rate limits on the API. However, implement appropriate rate limiting in your client applications to avoid overwhelming the server.
+
+### Data Validation
+
+The API validates required fields on the server side. Always validate data on the client side as well before sending requests to provide better user experience.
+
+---
+
+## Implementation Notes
+
+### Technology Stack
+
+- **Framework**: Hono
+- **ORM**: Drizzle ORM
+- **Database**: PostgreSQL
+- **Language**: TypeScript
+
+### Database Schema
+
+The API uses PostgreSQL with the following tables:
+
+**Users Table:**
+- `id` (serial, primary key)
+- `name` (varchar 255, required)
+- `email` (varchar 255, required, unique)
+- `createdAt` (timestamp, auto-generated)
+- `updatedAt` (timestamp, auto-generated)
+
+**Items Table:**
+- `id` (serial, primary key)
+- `name` (varchar 255, required)
+- `type` (varchar 100, required)
+- `description` (text, required)
+- `value` (integer, required)
+- `createdAt` (timestamp, auto-generated)
+- `updatedAt` (timestamp, auto-generated)
+
+### Common Patterns
+
+1. **Error Handling**: All endpoints use try-catch blocks and return JSON error responses with appropriate HTTP status codes
+2. **Validation**: POST endpoints validate required fields before processing
+3. **Partial Updates**: PUT endpoints allow partial updates (only provided fields are updated)
+4. **Auto Timestamps**: `createdAt` and `updatedAt` are automatically managed by the database
+5. **Returning**: All mutations (POST, PUT, DELETE) return the affected record(s) using Drizzle's `.returning()` method
+

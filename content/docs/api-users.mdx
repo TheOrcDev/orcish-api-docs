@@ -1,0 +1,263 @@
+---
+title: Users API
+description: Complete API documentation for User endpoints
+icon: Users
+---
+
+# Users API
+
+Complete documentation for all user-related endpoints in the Orcish API.
+
+## User Object
+
+```typescript
+{
+  id: number;              // Serial primary key (auto-generated)
+  name: string;            // User's name (max 255 characters)
+  email: string;           // User's email (max 255 characters, unique)
+  createdAt: string;       // ISO 8601 timestamp (auto-generated)
+  updatedAt: string;       // ISO 8601 timestamp (auto-updated)
+}
+```
+
+## Endpoints
+
+### List All Users
+
+Retrieve all users from the database.
+
+**Endpoint:** `GET /api/users`
+
+**Response:** `200 OK`
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Gruk the Mighty",
+    "email": "gruk@orcclan.com",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "name": "Zog Bloodaxe",
+    "email": "zog@orcclan.com",
+    "createdAt": "2024-01-02T00:00:00.000Z",
+    "updatedAt": "2024-01-02T00:00:00.000Z"
+  }
+]
+```
+
+**Error Responses:**
+
+- `500 Internal Server Error`: `{ "error": "Failed to fetch users" }`
+
+**Example Request:**
+
+```bash
+curl -X GET https://orcish-api.com/api/users
+```
+
+---
+
+### Get User by ID
+
+Retrieve a specific user by their ID.
+
+**Endpoint:** `GET /api/users/:id`
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | number | Yes | The unique identifier of the user |
+
+**Response:** `200 OK`
+
+```json
+{
+  "id": 1,
+  "name": "Gruk the Mighty",
+  "email": "gruk@orcclan.com",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+**Error Responses:**
+
+- `404 Not Found`: `{ "error": "User not found" }`
+- `500 Internal Server Error`: `{ "error": "Failed to fetch user" }`
+
+**Example Request:**
+
+```bash
+curl -X GET https://orcish-api.com/api/users/1
+```
+
+---
+
+### Create User
+
+Create a new user in the database.
+
+**Endpoint:** `POST /api/users`
+
+**Request Body:**
+
+```json
+{
+  "name": "Gruk the Mighty",
+  "email": "gruk@orcclan.com"
+}
+```
+
+**Request Body Schema:**
+
+| Field | Type | Required | Constraints | Description |
+|-------|------|----------|-------------|-------------|
+| `name` | string | Yes | Max 255 characters | User's full name |
+| `email` | string | Yes | Max 255 characters, unique | User's email address |
+
+**Response:** `201 Created`
+
+```json
+{
+  "id": 1,
+  "name": "Gruk the Mighty",
+  "email": "gruk@orcclan.com",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+**Error Responses:**
+
+- `400 Bad Request`: `{ "error": "Name and email are required" }`
+- `500 Internal Server Error`: `{ "error": "Failed to create user" }`
+
+**Example Request:**
+
+```bash
+curl -X POST https://orcish-api.com/api/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Gruk the Mighty",
+    "email": "gruk@orcclan.com"
+  }'
+```
+
+---
+
+### Update User
+
+Update an existing user. All fields are optional - only provided fields will be updated.
+
+**Endpoint:** `PUT /api/users/:id`
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | number | Yes | The unique identifier of the user |
+
+**Request Body:**
+
+```json
+{
+  "name": "Thrak Ironjaw",
+  "email": "thrak@orcclan.com"
+}
+```
+
+**Request Body Schema:**
+
+| Field | Type | Required | Constraints | Description |
+|-------|------|----------|-------------|-------------|
+| `name` | string | No | Max 255 characters | User's full name |
+| `email` | string | No | Max 255 characters, unique | User's email address |
+
+**Response:** `200 OK`
+
+```json
+{
+  "id": 1,
+  "name": "Thrak Ironjaw",
+  "email": "thrak@orcclan.com",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T01:00:00.000Z"
+}
+```
+
+**Note:** The `updatedAt` field is automatically set to the current timestamp when any field is updated.
+
+**Error Responses:**
+
+- `400 Bad Request`: `{ "error": "No fields to update" }`
+- `404 Not Found`: `{ "error": "User not found" }`
+- `500 Internal Server Error`: `{ "error": "Failed to update user" }`
+
+**Example Request:**
+
+```bash
+curl -X PUT https://orcish-api.com/api/users/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Thrak Ironjaw",
+    "email": "thrak@orcclan.com"
+  }'
+```
+
+**Partial Update Example:**
+
+You can update only specific fields:
+
+```bash
+curl -X PUT https://orcish-api.com/api/users/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Thrak Ironjaw"
+  }'
+```
+
+---
+
+### Delete User
+
+Delete a user from the database.
+
+**Endpoint:** `DELETE /api/users/:id`
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | number | Yes | The unique identifier of the user |
+
+**Response:** `200 OK`
+
+```json
+{
+  "message": "User deleted",
+  "user": {
+    "id": 1,
+    "name": "Gruk the Mighty",
+    "email": "gruk@orcclan.com",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+}
+```
+
+**Error Responses:**
+
+- `404 Not Found`: `{ "error": "User not found" }`
+- `500 Internal Server Error`: `{ "error": "Failed to delete user" }`
+
+**Example Request:**
+
+```bash
+curl -X DELETE https://orcish-api.com/api/users/1
+```
+
