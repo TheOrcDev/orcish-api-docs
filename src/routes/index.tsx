@@ -8,7 +8,15 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-    <HomeLayout {...baseOptions()} className="text-center py-32 justify-center">
+    <HomeLayout
+      {...baseOptions()}
+      className="text-center flex flex-col items-center py-32 justify-center"
+    >
+      <img
+        src="/src/assets/images/orcish-api-logo.png"
+        alt="Orcish API"
+        className="size-40"
+      />
       <h1 className="font-medium text-xl mb-4">Orcish API Documentation.</h1>
       <Link
         to="/docs/$"
