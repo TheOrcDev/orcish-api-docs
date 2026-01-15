@@ -8,24 +8,7 @@ icon: FolderGit2
 
 You can submit your project through the Orcish API.
 
-## Project Object
-
-```typescript
-{
-  id: string;              // UUID primary key (auto-generated)
-  name: string;            // Project name (required)
-  githubRepoUrl: string;   // GitHub repository URL (required, unique)
-  description: string;     // Project description (required)
-  createdAt: string;       // ISO 8601 timestamp (auto-generated)
-  updatedAt: string;       // ISO 8601 timestamp (auto-updated)
-  resetDate: string | null; // ISO 8601 timestamp (optional)
-  deletedAt: string | null; // ISO 8601 timestamp (soft delete, nullable)
-}
-```
-
-## Endpoints
-
-### Create Project
+### Create Project Endpoint
 
 Create a new project in the database.
 
