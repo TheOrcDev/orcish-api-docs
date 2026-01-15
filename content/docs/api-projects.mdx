@@ -1,0 +1,107 @@
+---
+title: Projects API
+description: Complete API documentation for Project endpoints
+icon: FolderGit2
+---
+
+# Projects API
+
+Complete documentation for all project-related endpoints in the Orcish API.
+
+## Project Object
+
+```typescript
+{
+  id: string;              // UUID primary key (auto-generated)
+  name: string;            // Project name (required)
+  githubRepoUrl: string;   // GitHub repository URL (required, unique)
+  description: string;     // Project description (required)
+  createdAt: string;       // ISO 8601 timestamp (auto-generated)
+  updatedAt: string;       // ISO 8601 timestamp (auto-updated)
+  resetDate: string | null; // ISO 8601 timestamp (optional)
+  deletedAt: string | null; // ISO 8601 timestamp (soft delete, nullable)
+}
+```
+
+## Endpoints
+
+### Create Project
+
+Create a new project in the database.
+
+**Endpoint:** `POST /api/projects`
+
+**Request Body:**
+
+```json
+{
+  "name": "Orcish Battle Manager",
+  "githubRepoUrl": "https://github.com/orcclan/battle-manager",
+  "description": "A comprehensive battle management system for orcish clans",
+  "resetDate": "2024-12-31T23:59:59.000Z"
+}
+```
+
+**Request Body Schema:**
+
+| Field | Type | Required | Constraints | Description |
+|-------|------|----------|-------------|-------------|
+| `name` | string | Yes | Not null | Project name |
+| `githubRepoUrl` | string | Yes | Not null, unique | GitHub repository URL |
+| `description` | string | Yes | Not null | Project description |
+| `resetDate` | string | No | ISO 8601 timestamp | Optional reset date for the project |
+
+**Response:** `201 Created`
+
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "Orcish Battle Manager",
+  "githubRepoUrl": "https://github.com/orcclan/battle-manager",
+  "description": "A comprehensive battle management system for orcish clans",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "resetDate": "2024-12-31T23:59:59.000Z",
+  "deletedAt": null
+}
+```
+
+**Error Responses:**
+
+- `400 Bad Request`: `{ "error": "name, githubRepoUrl, and description are required" }`
+- `409 Conflict`: `{ "error": "A project with this GitHub URL already exists" }`
+- `500 Internal Server Error`: Server error during project creation
+
+**Example Request:**
+
+```bash
+curl -X POST https://orcish-api.com/api/projects \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Orcish Battle Manager",
+    "githubRepoUrl": "https://github.com/orcclan/battle-manager",
+    "description": "A comprehensive battle management system for orcish clans",
+    "resetDate": "2024-12-31T23:59:59.000Z"
+  }'
+```
+
+**Example Request Without Reset Date:**
+
+```bash
+curl -X POST https://orcish-api.com/api/projects \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Orcish Battle Manager",
+    "githubRepoUrl": "https://github.com/orcclan/battle-manager",
+    "description": "A comprehensive battle management system for orcish clans"
+  }'
+```
+
+**Notes:**
+
+- The `id` field is automatically generated as a UUID
+- The `githubRepoUrl` must be unique across all projects
+- The `createdAt` and `updatedAt` fields are automatically set to the current timestamp
+- The `resetDate` field is optional and can be `null`
+- The `deletedAt` field is used for soft deletes and is `null` for active projects
+- If a duplicate GitHub URL is detected (either through explicit check or database constraint), a `409 Conflict` error is returned

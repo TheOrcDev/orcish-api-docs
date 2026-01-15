@@ -8,7 +8,7 @@ icon: Code
 
 ## Introduction
 
-The Orcish API is a RESTful API built with the Hono framework, using Drizzle ORM with PostgreSQL. It provides endpoints for managing users and items in your application.
+The Orcish API is a RESTful API built with the Hono framework, using Drizzle ORM with PostgreSQL. It provides endpoints for managing users, items, and projects in your application.
 
 ## Base URL
 
@@ -50,6 +50,21 @@ Currently, the Orcish API does not require authentication. All endpoints are pub
 }
 ```
 
+### Project Object
+
+```typescript
+{
+  id: string;              // UUID primary key (auto-generated)
+  name: string;            // Project name (required)
+  githubRepoUrl: string;   // GitHub repository URL (required, unique)
+  description: string;     // Project description (required)
+  createdAt: string;       // ISO 8601 timestamp (auto-generated)
+  updatedAt: string;       // ISO 8601 timestamp (auto-updated)
+  resetDate: string | null; // ISO 8601 timestamp (optional)
+  deletedAt: string | null; // ISO 8601 timestamp (soft delete, nullable)
+}
+```
+
 ## HTTP Status Codes
 
 The API uses standard HTTP status codes:
@@ -60,6 +75,7 @@ The API uses standard HTTP status codes:
 | `201` | Created (POST) |
 | `400` | Bad Request (validation errors) |
 | `404` | Not Found (resource doesn't exist) |
+| `409` | Conflict (duplicate resource, e.g., duplicate GitHub URL) |
 | `500` | Internal Server Error (database/processing errors) |
 
 ## Error Responses
@@ -87,7 +103,8 @@ Returns API information and available endpoints.
   "message": "Orcish API",
   "endpoints": {
     "users": "/api/users",
-    "items": "/api/items"
+    "items": "/api/items",
+    "projects": "/api/projects"
   }
 }
 ```
@@ -96,10 +113,11 @@ Returns API information and available endpoints.
 
 ## API Endpoints
 
-The Orcish API provides endpoints for managing users and items. Detailed documentation for each resource is available in separate pages:
+The Orcish API provides endpoints for managing users, items, and projects. Detailed documentation for each resource is available in separate pages:
 
 - **[Users API](/docs/api-users)** - Complete documentation for all user endpoints
 - **[Items API](/docs/api-items)** - Complete documentation for all item endpoints
+- **[Projects API](/docs/api-projects)** - Complete documentation for all project endpoints
 
 ---
 
@@ -180,6 +198,16 @@ The API uses PostgreSQL with the following tables:
 - `value` (integer, required)
 - `createdAt` (timestamp, auto-generated)
 - `updatedAt` (timestamp, auto-generated)
+
+**Projects Table:**
+- `id` (uuid, primary key, auto-generated)
+- `name` (text, required)
+- `github_repo_url` (text, required, unique)
+- `description` (text, required)
+- `created_at` (timestamp, auto-generated)
+- `updated_at` (timestamp, auto-generated)
+- `reset_date` (timestamp, nullable)
+- `deleted_at` (timestamp, nullable, soft delete)
 
 ### Common Patterns
 
