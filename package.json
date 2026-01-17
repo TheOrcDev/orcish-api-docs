@@ -13,9 +13,9 @@
     "format": "biome format --write"
   },
   "dependencies": {
-    "@tanstack/react-router": "^1.150.0",
-    "@tanstack/react-router-devtools": "^1.150.0",
-    "@tanstack/react-start": "^1.150.0",
+    "@tanstack/react-router": "^1.151.1",
+    "@tanstack/react-router-devtools": "^1.151.1",
+    "@tanstack/react-start": "^1.151.1",
     "fumadocs-core": "16.4.7",
     "fumadocs-mdx": "14.2.5",
     "fumadocs-ui": "16.4.7",
